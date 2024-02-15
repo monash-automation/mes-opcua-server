@@ -7,11 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+redis = "^5.0.1"
+pydantic = "^2.6.1"
+pydantic-settings = "^2.1.0"
+flatdict = "^4.0.1"
+opcuax = { git = "https://github.com/monash-automation/opcuax.git" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
 pytest-asyncio = "^0.23.3"
-redis = "^5.0.1"
 pre-commit = "^3.6.0"
 ruff = "^0.2.0"
 mypy = "^1.8.0"
@@ -46,7 +50,7 @@ select = [
 known-third-party = ["pydantic", "asyncua"]
 
 [tool.poetry.scripts]
-settings = "mes_opcua_server.main:run"
+server = "mes_opcua_server.main:main"
 
 [build-system]
 requires = ["poetry-core"]
