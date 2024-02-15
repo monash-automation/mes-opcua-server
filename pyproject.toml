@@ -8,6 +8,45 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.4"
+pytest-asyncio = "^0.23.3"
+redis = "^5.0.1"
+pre-commit = "^3.6.0"
+ruff = "^0.2.0"
+mypy = "^1.8.0"
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "asyncua.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flatdict"
+ignore_missing_imports = true
+
+[tool.ruff]
+src = ["opcuax", "tests", "examples"]
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+
+[tool.ruff.lint.isort]
+known-third-party = ["pydantic", "asyncua"]
+
+[tool.poetry.scripts]
+settings = "mes_opcua_server.main:run"
 
 [build-system]
 requires = ["poetry-core"]
