@@ -5,11 +5,25 @@ import redis
 from opcuax import OpcuaModel, OpcuaServer
 from redis.asyncio import Redis
 
-from .models import Printer
+from .models import Printer, RobotArm
 from .settings import EnvSettings
 
 
-async def run_server():
+async def create_printers(server: OpcuaServer, n: int) -> dict[str, OpcuaModel]:
+    def name(i: int) -> str:
+        return f"Printer{i}"
+
+    return {name(i): await server.create(name(i), Printer()) for i in range(1, n + 1)}
+
+
+async def create_robot_arms(server: OpcuaServer, n: int) -> dict[str, OpcuaModel]:
+    def name(i: int) -> str:
+        return f"Arm{i}"
+
+    return {name(i): await server.create(name(i), RobotArm()) for i in range(1, n + 1)}
+
+
+async def run_server() -> None:
     settings = EnvSettings()
     redis_dsn = settings.opcua_server_redis_url
 
@@ -20,9 +34,10 @@ async def run_server():
     server = OpcuaServer.from_settings(settings)
 
     async with server:
-        printer1 = await server.create("Printer1", Printer())
-        printer2 = await server.create("Printer2", Printer())
-        printer3 = await server.create("Printer3", Printer())
+        printers = await create_printers(server, 8)
+        arms = await create_robot_arms(server, 4)
+
+        models = printers | arms
 
         async def cache(key: str, model: OpcuaModel) -> None:
             while True:
@@ -32,17 +47,13 @@ async def run_server():
                 await redis_client.hset(key, mapping=data)
                 await asyncio.sleep(1)
 
-        _ = [
-            asyncio.create_task(cache(key, model))
-            for key, model in [
-                ("Printer1", printer1),
-                ("Printer2", printer2),
-                ("Printer3", printer3),
-            ]
-        ]
+        _ = {
+            name: asyncio.create_task(cache(name, model))
+            for name, model in models.items()
+        }
 
         await server.loop()
 
 
-def main():
+def main() -> None:
     asyncio.run(run_server())
