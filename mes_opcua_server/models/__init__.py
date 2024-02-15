@@ -1,3 +1,4 @@
-__all__ = ["Printer"]
+__all__ = ["Printer", "RobotArm"]
 
 from .printer import Printer
+from .robot import RobotArm
