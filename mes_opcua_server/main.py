@@ -36,10 +36,8 @@ async def run_server():
             asyncio.create_task(cache(key, model))
             for key, model in [
                 ("Printer1", printer1),
-                "Printer2",
-                printer2,
-                "Printer3",
-                printer3,
+                ("Printer2", printer2),
+                ("Printer3", printer3),
             ]
         ]
 
