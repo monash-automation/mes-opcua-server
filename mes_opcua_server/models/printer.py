@@ -1,8 +1,7 @@
 from datetime import datetime
-from ipaddress import IPv4Address
 
 from opcuax import OpcuaModel
-from pydantic import BaseModel, Field, NonNegativeFloat
+from pydantic import BaseModel, Field, HttpUrl, NonNegativeFloat
 
 
 class PrinterHead(BaseModel):
@@ -25,8 +24,8 @@ class Temperature(BaseModel):
 
 
 class Printer(OpcuaModel):
-    ip: IPv4Address = "127.0.0.1"
-    last_update: datetime = Field(default_factory=datetime.now)
+    url: HttpUrl = "http://localhost"
+    update_time: datetime = Field(default_factory=datetime.now)
 
     state: str = "N/A"
     nozzle: Temperature = Temperature()
