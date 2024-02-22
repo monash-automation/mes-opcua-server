@@ -13,7 +13,7 @@ async def create_printers(server: OpcuaServer, n: int) -> dict[str, OpcuaModel]:
     def name(i: int) -> str:
         return f"Printer{i}"
 
-    return {name(i): await server.create(name(i), Printer()) for i in range(1, n + 1)}
+    return {name(i): await server.create(name(i), Printer()) for i in range(n)}
 
 
 async def create_robot_arms(server: OpcuaServer, n: int) -> dict[str, OpcuaModel]:
@@ -34,7 +34,8 @@ async def run_server() -> None:
     server = OpcuaServer.from_settings(settings)
 
     async with server:
-        printers = await create_printers(server, 8)
+        # Printer 0-7 for production, Printer 8-9 for testing
+        printers = await create_printers(server, 10)
         arms = await create_robot_arms(server, 4)
 
         models = printers | arms
