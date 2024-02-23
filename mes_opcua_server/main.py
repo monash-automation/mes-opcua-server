@@ -43,7 +43,7 @@ async def run_server() -> None:
         async def cache(key: str, model: OpcuaModel) -> None:
             while True:
                 await server.refresh(model)
-                data = flatdict.FlatDict(model.model_dump(), delimiter=".")
+                data = flatdict.FlatDict(model.model_dump(), delimiter="_")
                 data = {k: str(v) for k, v in data.items()}
                 await redis_client.hset(key, mapping=data)
                 await asyncio.sleep(1)
