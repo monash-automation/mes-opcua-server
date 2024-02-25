@@ -27,9 +27,12 @@ class Printer(OpcuaModel):
     url: HttpUrl = "http://localhost"
     update_time: datetime = Field(default_factory=datetime.now)
 
-    state: str = "N/A"
+    state: str = Field(default="N/A", examples=["ready", "printing", "error"])
     nozzle: Temperature = Temperature()
     bed: Temperature = Temperature()
     head: PrinterHead = PrinterHead()
     job: PrinterJob = PrinterJob()
-    camera_url: HttpUrl = "http://localhost"
+    camera_url: HttpUrl = Field(
+        default="http://localhost", examples=["http://172.32.1.92:8080/?action=stream"]
+    )
+    model: str = Field(default="Unknown", examples=["Prusa XL 1 head"])
