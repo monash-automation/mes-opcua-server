@@ -32,3 +32,4 @@ class Printer(OpcuaModel):
     bed: Temperature = Temperature()
     head: PrinterHead = PrinterHead()
     job: PrinterJob = PrinterJob()
+    camera_url: HttpUrl = "http://localhost"
