@@ -19,8 +19,9 @@ class PrinterJob(BaseModel):
 
 
 class Temperature(BaseModel):
-    actual: NonNegativeFloat = 0
-    target: NonNegativeFloat = 0
+    # printer may return negative temperature...
+    actual: float = 0
+    target: float = 0
 
 
 class Printer(OpcuaModel):
